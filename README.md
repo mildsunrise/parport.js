@@ -1,7 +1,5 @@
 # Parport.JS
 
-> **Note:** not finished yet. I'll have it in these weeks. Stay tuned!
-
 Parport.js is a Node.JS addon you can use to **access,
 control and communicate with parallel ports**.  
 It uses the C++/Java library [Parallel-Port](http://parallel-port.googlecode.com) to
