@@ -1,3 +1,24 @@
+/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 2; tab-width: 2 -*- */
+/*
+ * parport.js
+ * Copyright (C) 2012 Xavier Mendez <jmendeth@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <exception>
+
 // Node
 #include <node.h>
 #include <v8.h>
@@ -5,6 +26,7 @@
 // Parallel-Port
 #include "ParallelPort.h"
 
+using namespace std;
 using namespace v8;
 using namespace node;
 
@@ -27,6 +49,7 @@ void CheckArguments(int min, const Arguments& args) {
   try {
 
 #define V8_WRAP_END()                                                          \
+    return scope.Close(Undefined());                                           \
   } catch (Handle<Value> err) {                                                \
     return ThrowException(err);                                                \
   } catch (exception err) {                                                    \
@@ -77,7 +100,31 @@ template <class T> void SetPersistent(Persistent<T>& handle, Handle<T> value) {
 // ACTUAL WRAPPING
 /////////////////////////////////
 
-// TODO
+class ParportWrap: public ObjectWrap {
+public:
+  ParportWrap() {}
+  ~ParportWrap() {}
+
+  static V8_CALLBACK(NewInstance, 0) {
+    (new ParportWrap)->Wrap(args.This());
+    return scope.Close(args.This());
+  } V8_WRAP_END()
+  
+  static V8_CALLBACK(Open, 0) {
+    ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
+    
+    //Extract arguments
+    short portid = 0;
+    if (args.Length() >= 1)
+      portid = args[0]->IntegerValue();
+    
+    port.open(portid);
+  } V8_WRAP_END()
+  
+  
+private:
+  ParallelPort port;
+};
 
 
 /////////////////////////////////
