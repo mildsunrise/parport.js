@@ -1,4 +1,4 @@
-/* -*- Mode: C; indent-tabs-mode: s; c-basic-offset: 2; tab-width: 2 -*- */
+/* -*- Mode: C; c-basic-offset: 2; tab-width: 2 -*- */
 /*
  * parport.js
  * Copyright (C) 2012 Xavier Mendez <jmendeth@gmail.com>
@@ -102,28 +102,64 @@ template <class T> void SetPersistent(Persistent<T>& handle, Handle<T> value) {
 
 class ParportWrap: public ObjectWrap {
 public:
-  ParportWrap() {}
-  ~ParportWrap() {}
+  ParportWrap(short portid = 0) : ptid(portid) {
+    port.open(portid);
+  }
+  ~ParportWrap() {
+    port.close();
+  }
 
   static V8_CALLBACK(NewInstance, 0) {
-    (new ParportWrap)->Wrap(args.This());
-    return scope.Close(args.This());
-  } V8_WRAP_END()
-  
-  static V8_CALLBACK(Open, 0) {
-    ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
-    
     //Extract arguments
     short portid = 0;
     if (args.Length() >= 1)
       portid = args[0]->IntegerValue();
     
-    port.open(portid);
+    ParportWrap* inst = new ParportWrap (portid);
+    inst->Wrap(args.This());
+    
+    return scope.Close(args.This());
   } V8_WRAP_END()
   
+  static V8_CALLBACK(ReadData, 0) {
+    ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
+    
+    return scope.Close(Integer::New(port.readData()));
+  } V8_WRAP_END()
+  static V8_CALLBACK(ReadControl, 0) {
+    ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
+    
+    return scope.Close(Integer::New(port.readControl()));
+  } V8_WRAP_END()
+  static V8_CALLBACK(ReadStatus, 0) {
+    ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
+    
+    return scope.Close(Integer::New(port.readStatus()));
+  } V8_WRAP_END()
   
+  static V8_CALLBACK(WriteData, 1) {
+    ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
+    char data = args[0]->IntegerValue();
+    port.writeData(data);
+  } V8_WRAP_END()
+  static V8_CALLBACK(WriteControl, 1) {
+    ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
+    char data = args[0]->IntegerValue();
+    port.writeControl(data);
+  } V8_WRAP_END()
+  //static V8_CALLBACK(WriteStatus, 1) {
+  //  ParallelPort& port = ObjectWrap::Unwrap<ParportWrap>(args.This())->port;
+  //  char data = args[0]->IntegerValue();
+  //  port.writeStatus(data);
+  //} V8_WRAP_END()
+  
+  static V8_GETTER(GetPortId) {
+    ParportWrap* inst = ObjectWrap::Unwrap<ParportWrap>(info.Holder());
+    return scope.Close(Integer::New(inst->ptid));
+  } V8_WRAP_END()
 private:
   ParallelPort port;
+  const short ptid;
 };
 
 
@@ -131,8 +167,31 @@ private:
 // INTERFACE DECLARATION
 /////////////////////////////////
 
+Persistent<FunctionTemplate> initParport(Handle<Object> target) {
+  HandleScope scope;
+  
+  Local<FunctionTemplate> protL = FunctionTemplate::New(ParportWrap::NewInstance);
+  Persistent<FunctionTemplate> prot = Persistent<FunctionTemplate>::New(protL);
+  prot->InstanceTemplate()->SetInternalFieldCount(1);
+  prot->SetClassName(String::NewSymbol("Port"));
+
+  NODE_SET_PROTOTYPE_METHOD(prot, "readData", ParportWrap::ReadData);
+  NODE_SET_PROTOTYPE_METHOD(prot, "readStatus", ParportWrap::ReadStatus);
+  NODE_SET_PROTOTYPE_METHOD(prot, "readControl", ParportWrap::ReadControl);
+  NODE_SET_PROTOTYPE_METHOD(prot, "writeData", ParportWrap::WriteData);
+  //NODE_SET_PROTOTYPE_METHOD(prot, "writeStatus", ParportWrap::WriteStatus);
+  NODE_SET_PROTOTYPE_METHOD(prot, "writeControl", ParportWrap::WriteControl);
+
+  prot->InstanceTemplate()->SetAccessor(String::NewSymbol("id"), ParportWrap::GetPortId);
+
+  target->Set(String::NewSymbol("Port"), prot->GetFunction());
+  return prot;
+}
+
 void init(Handle<Object> target) {
-  //TODO
+  HandleScope scope;
+  
+  Persistent<FunctionTemplate> parport = initParport(target);
 }
 
 NODE_MODULE(parport, init);

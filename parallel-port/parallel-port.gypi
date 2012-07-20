@@ -7,7 +7,11 @@
 
       # Compiler flags
       "conditions": [
+        ['OS=="linux"', {
+          'defines': [ '_LINUX' ]
+        }],
         ['OS=="win"', {
+          'defines': [ '_WIN32' ],
           'cflags_cc': [
             #FIXME
           ]

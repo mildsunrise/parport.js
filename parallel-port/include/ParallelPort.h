@@ -92,11 +92,16 @@ public:
 	 * @brief Write data to data pins (usually 0x378)
 	 */
 	void writeData(char value) throw (std::runtime_error);
+	
+	/**
+	 * @brief Write data to control pins (usually 0x37a)
+	 */
+	void writeControl(char value) throw (std::runtime_error);
 
 	/**
 	 * @brief Write data to status pins (usually 0x379)
 	 */
-	void writeControl(char value) throw (std::runtime_error);
+	//void writeStatus(char value) throw (std::runtime_error);
 };
 
 #endif /* PARALLELPORT_H_ */
