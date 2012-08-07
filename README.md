@@ -8,7 +8,8 @@ provide a **high-level** and **cross-platform**[<sup>✝</sup>](#compatibility) 
 ## License
 
 As Parallel-Port is distributed under the GPL, I'm forced to do the
-same. (Which I agree) So, Parport.JS is distributed under the [GPLv3](http://www.gnu.org/licenses)
+same (which I perfectly agree). So, Parport.JS is distributed under
+the [GPLv3](http://www.gnu.org/licenses).
 
 ## Usage
 
