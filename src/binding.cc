@@ -24,6 +24,8 @@
 // Parallel-Port
 #include "ParallelPort.h"
 
+namespace parport {
+
 ///////////////////
 // PARPORT CLASS //
 ///////////////////
@@ -105,3 +107,5 @@ NODE_DEF_MAIN() {
   // The Parport class
   ParportWrap::init(target);
 } NODE_DEF_MAIN_END(parport)
+
+};
