@@ -1,7 +1,5 @@
 # Parport.JS
 
-> **Note:** not finished yet. I'll have it in these weeks. Stay tuned!
-
 Parport.js is a Node.JS addon you can use to **access,
 control and communicate with parallel ports**.  
 It uses the C++/Java library [Parallel-Port](http://parallel-port.googlecode.com) to
@@ -10,7 +8,8 @@ provide a **high-level** and **cross-platform**[<sup>✝</sup>](#compatibility) 
 ## License
 
 As Parallel-Port is distributed under the GPL, I'm forced to do the
-same. (Which I agree) So, Parport.JS is distributed under the [GPLv3](http://www.gnu.org/licenses)
+same (which I perfectly agree). So, Parport.JS is distributed under
+the [GPLv3](http://www.gnu.org/licenses).
 
 ## Usage
 
