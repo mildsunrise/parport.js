@@ -102,7 +102,7 @@ private:
 NODE_DEF_MAIN() {
   // Version stuff
   v8u::Version::init(target);
-  target->Set(v8u::Symbol("version"), (new v8u::Version(1,0,1))->Wrapped());
+  target->Set(v8u::Symbol("version"), (new v8u::Version(1,0,2))->Wrapped());
 
   // The Parport class
   ParportWrap::init(target);
