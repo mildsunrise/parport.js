@@ -1,0 +1,27 @@
+{ "name": "parport"
+, "description": "High-level Node.JS interface to parallel ports."
+, "version": "1.0.0"
+, "keywords": ["parallel", "port"]
+
+, "author": "Xavier Mendez <jmendeth@gmail.com> (http://jmendeth.com)"
+, "maintainers": [ "Xavier Mendez <jmendeth@gmail.com> (http://jmendeth.com)"
+                 ]
+
+, "main": "./build/Release/parport"
+, "engines": { "node": ">= 0.6" }
+, "directories": { "bin": "./bin"
+                 , "src": "./src"
+                 , "doc": "./doc"
+                 , "example": "./examples"
+                 }
+
+, "repository": { "type": "git"
+                , "url": "https://github.com/jmendeth/parport.js.git"
+                }
+, "bugs": { "url": "https://github.com/jmendeth/parport.js/issues" }
+
+, "licenses": [ { "type": "GPL",
+                  "version": "3",
+                  "url": "http://www.gnu.org/licenses/gpl-3.0.txt" }
+              ]
+}
