@@ -5,6 +5,8 @@ control and communicate with parallel ports**.
 It uses the C++/Java library [Parallel-Port](http://parallel-port.googlecode.com) to
 provide a **high-level** and **cross-platform**[<sup>✝</sup>](#compatibility) interface.
 
+    npm install parport
+
 ## License
 
 As Parallel-Port is distributed under the GPL, I'm forced to do the
@@ -13,7 +15,29 @@ the [GPLv3](http://www.gnu.org/licenses).
 
 ## Usage
 
-TODO
+```javascript
+var par = require('parport');
+
+var port = new par.Port();
+port.writeControl(241);
+console.log('Data:', port.readData());
+console.log('Status:', port.readStatus());
+```
+
+You can pass an ID to pick which port to open (useful if you have more than one):
+
+```javascript
+var port = new par.Port(1);
+port.writeData(110);
+```
+
+And remember:
+
+> Exceptions may be thrown  
+> if something goes wrong.
+
+Full documentation can be found under `doc/`.  
+More examples can be found under `examples/`.
 
 ## Compatibility
 
