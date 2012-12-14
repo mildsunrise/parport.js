@@ -40,60 +40,67 @@ public:
   }
 
   //Constructor
-  V8_CL_CTOR(ParportWrap) {
+  V8_CTOR(ParportWrap) {
     short portid = 0;
     if (args.Length() >= 1)
       portid = v8u::Int(args[0]);
     
-    inst = new ParportWrap(portid);
-  } V8_CL_CTOR_END()
+    V8_WRAP(new ParportWrap(portid));
+  } V8_CTOR_END()
 
   //Read methods
-  V8_CL_CALLBACK(ParportWrap, ReadData) {
-    return scope.Close(v8u::Int(inst->port.readData()));
-  } V8_CALLBACK_END()
-  V8_CL_CALLBACK(ParportWrap, ReadControl) {
-    return scope.Close(v8u::Int(inst->port.readControl()));
-  } V8_CALLBACK_END()
-  V8_CL_CALLBACK(ParportWrap, ReadStatus) {
-    return scope.Close(v8u::Int(inst->port.readStatus()));
-  } V8_CALLBACK_END()
+  static V8_CB(ReadData) {
+    ParportWrap* inst = Unwrap(args.This());
+    V8_RET(v8u::Int(inst->port.readData()));
+  } V8_CB_END()
+  static V8_CB(ReadControl) {
+    ParportWrap* inst = Unwrap(args.This());
+    V8_RET(v8u::Int(inst->port.readControl()));
+  } V8_CB_END()
+  static V8_CB(ReadStatus) {
+    ParportWrap* inst = Unwrap(args.This());
+    V8_RET(v8u::Int(inst->port.readStatus()));
+  } V8_CB_END()
 
   //Write methods
-  V8_CL_CALLBACK(ParportWrap, WriteData) {
-    v8u::CheckArguments(1, args);
+  static V8_CB(WriteData) {
+    ParportWrap* inst = Unwrap(args.This());
     inst->port.writeData(v8u::Int(args[0]));
-  } V8_CALLBACK_END()
-  V8_CL_CALLBACK(ParportWrap, WriteControl) {
-    v8u::CheckArguments(1, args);
+    V8_RET(v8::Undefined());
+  } V8_CB_END()
+  static V8_CB(WriteControl) {
+    ParportWrap* inst = Unwrap(args.This());
     inst->port.writeControl(v8u::Int(args[0]));
-  } V8_CALLBACK_END()
-  //V8_CL_CALLBACK(ParportWrap, WriteStatus) {
-  //  v8u::CheckArguments(1, args);
+    V8_RET(v8::Undefined());
+  } V8_CB_END()
+  //static V8_CB(WriteStatus) {
+  //  ParportWrap* inst = Unwrap(args.This());
   //  inst->port.writeStatus(v8u::Int(args[0]));
-  //} V8_CALLBACK_END()
+  //  V8_RET(v8::Undefined());
+  //} V8_CB_END()
 
   //Getters
-  V8_CL_GETTER(ParportWrap, Id) {
-    return scope.Close(v8u::Int(inst->ptid));
-  } V8_GETTER_END()
+  V8_GET(GetId) {
+    ParportWrap* inst = Unwrap(info.Holder());
+    V8_RET(v8u::Int(inst->ptid));
+  } V8_GET_END()
 
   //TYPE DEFINITION
-  NODE_DEF_TYPE("Port") {
-    V8_DEF_METHOD(ReadData, "readData")
-    V8_DEF_METHOD(ReadStatus, "readStatus")
-    V8_DEF_METHOD(ReadControl, "readControl")
-    V8_DEF_METHOD(WriteData, "writeData")
-    //V8_DEF_METHOD(WriteStatus, "writeStatus")
-    V8_DEF_METHOD(WriteControl, "writeControl")
+  NODE_TYPE(ParportWrap, "Port") {
+    V8_DEF_CB("readData", ReadData);
+    V8_DEF_CB("readStatus", ReadStatus);
+    V8_DEF_CB("readControl", ReadControl);
+    V8_DEF_CB("writeData", WriteData);
+    //V8_DEF_CB("writeStatus", WriteStatus);
+    V8_DEF_CB("writeControl", WriteControl);
 
-    V8_DEF_RPROP(Id, "id")
-  } NODE_DEF_TYPE_END()
+    V8_DEF_GET("id", GetId);
+  } NODE_TYPE_END()
 private:
   ParallelPort port;
   const short ptid;
 };
-
+V8_POST_TYPE(ParportWrap);
 
 ///////////////////////
 // MODULE DEFINITION //
