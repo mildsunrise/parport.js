@@ -25,6 +25,7 @@
 #include "ParallelPort.h"
 
 namespace parport {
+#define PARPORT_VERSION 1,1,0  //comma-separated
 
 ///////////////////
 // PARPORT CLASS //
@@ -109,7 +110,7 @@ V8_POST_TYPE(ParportWrap);
 NODE_DEF_MAIN() {
   // Version stuff
   v8u::Version::init(target);
-  target->Set(v8u::Symbol("version"), (new v8u::Version(1,1,0))->Wrapped());
+  target->Set(v8u::Symbol("version"), (new v8u::Version(PARPORT_VERSION))->Wrapped());
 
   // The Parport class
   ParportWrap::init(target);
