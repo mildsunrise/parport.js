@@ -1,6 +1,6 @@
 { "name": "parport"
 , "description": "High-level Node.JS interface to parallel ports."
-, "version": "1.1.0"
+, "version": "1.1.1"
 , "keywords": ["parallel", "port"]
 
 , "author": "Xavier Mendez <jmendeth@gmail.com> (http://jmendeth.com)"
