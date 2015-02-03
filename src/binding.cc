@@ -25,7 +25,7 @@
 #include "ParallelPort.h"
 
 namespace parport {
-#define PARPORT_VERSION 1,1,1  //comma-separated
+#define PARPORT_VERSION 1,1,2  //comma-separated
 
 ///////////////////
 // PARPORT CLASS //
