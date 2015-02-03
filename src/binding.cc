@@ -41,47 +41,44 @@ public:
   }
 
   //Constructor
-  V8_CTOR(ParportWrap) {
-    short portid = 0;
-    if (args.Length() >= 1)
-      portid = v8u::Int(args[0]);
-    
+  V8_CTOR() {
+    short portid = v8u::Int(info[0]);
     V8_WRAP(new ParportWrap(portid));
   } V8_CTOR_END()
 
   //Read methods
   static V8_CB(ReadData) {
-    ParportWrap* inst = Unwrap(args.This());
+    ParportWrap* inst = Unwrap(info.This());
     V8_RET(v8u::Int(inst->port.readData()));
   } V8_CB_END()
   static V8_CB(ReadControl) {
-    ParportWrap* inst = Unwrap(args.This());
+    ParportWrap* inst = Unwrap(info.This());
     V8_RET(v8u::Int(inst->port.readControl()));
   } V8_CB_END()
   static V8_CB(ReadStatus) {
-    ParportWrap* inst = Unwrap(args.This());
+    ParportWrap* inst = Unwrap(info.This());
     V8_RET(v8u::Int(inst->port.readStatus()));
   } V8_CB_END()
 
   //Write methods
   static V8_CB(WriteData) {
-    ParportWrap* inst = Unwrap(args.This());
-    inst->port.writeData(v8u::Int(args[0]));
+    ParportWrap* inst = Unwrap(info.This());
+    inst->port.writeData(v8u::Int(info[0]));
     V8_RET(v8::Undefined());
   } V8_CB_END()
   static V8_CB(WriteControl) {
-    ParportWrap* inst = Unwrap(args.This());
-    inst->port.writeControl(v8u::Int(args[0]));
+    ParportWrap* inst = Unwrap(info.This());
+    inst->port.writeControl(v8u::Int(info[0]));
     V8_RET(v8::Undefined());
   } V8_CB_END()
   //static V8_CB(WriteStatus) {
-  //  ParportWrap* inst = Unwrap(args.This());
-  //  inst->port.writeStatus(v8u::Int(args[0]));
+  //  ParportWrap* inst = Unwrap(info.This());
+  //  inst->port.writeStatus(v8u::Int(info[0]));
   //  V8_RET(v8::Undefined());
   //} V8_CB_END()
 
   //Getters
-  V8_GET(GetId) {
+  static V8_GET(GetId) {
     ParportWrap* inst = Unwrap(info.Holder());
     V8_RET(v8u::Int(inst->ptid));
   } V8_GET_END()
