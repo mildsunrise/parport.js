@@ -203,13 +203,10 @@ V8_SSET(IDENTIFIER) {                                                          \
 // Type functions
 
 #if NODE_VERSION_AT_LEAST(0,11,4)
-  #define __node_handle_polyfill                                               \
-    inline v8::Handle<v8::Object> persistentHandle() {                         \
-      return v8::Local<v8::Object>::New(__node_isolate, persistent());         \
-    }
+  #define __node_handle_polyfill
 #else
   #define __node_handle_polyfill                                               \
-    inline v8::Handle<v8::Object> persistentHandle() {return handle_;}
+    inline v8::Persistent<v8::Object> persistent() {return handle_;}
 #endif
 
 #define V8_STYPE(CPP_TYPE)                                                     \
@@ -240,13 +237,13 @@ V8_SSET(IDENTIFIER) {                                                          \
   virtual v8::Local<v8::Object> Wrapped() {                                    \
     V8_HANDLE_SCOPE(scope);                                                    \
                                                                                \
-    v8::Handle<v8::Object> handle = this->persistentHandle();                  \
+    v8::Local<v8::Object> handle = scope.Close(this->persistent());            \
     if (handle.IsEmpty()) {                                                    \
       v8::Handle<v8::Value> args [1] = {v8::External::New(this)};              \
-      handle = templ_->GetFunction()->NewInstance(1,args);                     \
+      handle = scope.Close(templ_->GetFunction()->NewInstance(1,args));        \
       Wrap(handle);                                                            \
     }                                                                          \
-    return scope.Close(handle);                                                \
+    return handle;                                                             \
   }                                                                            \
   static bool HasInstance(v8::Handle<v8::Object> obj) {                        \
     return templ_->HasInstance(obj);                                           \
@@ -260,7 +257,7 @@ V8_SSET(IDENTIFIER) {                                                          \
   v8::Local<v8::Object> TYPE::Wrapped() {                                      \
     V8_HANDLE_SCOPE(scope);                                                    \
                                                                                \
-    v8::Handle<v8::Object> handle = this->persistentHandle();                  \
+    v8::Handle<v8::Object> handle = v8::Local<v8::Object>::New(__node_isolate, this->persistent());                        \
     if (handle.IsEmpty()) {                                                    \
       v8::Handle<v8::Value> args [1] = {v8::External::New(this)};              \
       handle = templ_->GetFunction()->NewInstance(1,args);                     \
